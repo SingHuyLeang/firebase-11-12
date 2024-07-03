@@ -3,6 +3,7 @@ import 'package:firebase_11_12/feature/authentication/sign_up.dart';
 import 'package:firebase_11_12/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -30,8 +31,8 @@ class MyApp extends StatelessWidget {
       ),
       home: const SignInScreen(),
       routes: {
-        '/signin' :(context) => const SignInScreen(),
-        '/signup' :(context) => const SignUpScreen(),
+        '/signin': (context) => SignInScreen(),
+        '/signup': (context) => SignUpScreen(),
       },
     );
   }

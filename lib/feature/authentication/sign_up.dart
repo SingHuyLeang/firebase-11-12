@@ -1,7 +1,12 @@
+import 'package:firebase_11_12/feature/authentication/controller/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'dart:developer';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  SignUpScreen({super.key});
+
+  final controller = Get.put(UserContoller());
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +43,7 @@ class SignUpScreen extends StatelessWidget {
               // form
               const SizedBox(height: 26),
               TextField(
+                controller: controller.emailCtr,
                 decoration: InputDecoration(
                   hintText: 'Email',
                   border: OutlineInputBorder(
@@ -48,6 +54,7 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextField(
+                controller: controller.passCtr,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   border: OutlineInputBorder(
@@ -62,7 +69,9 @@ class SignUpScreen extends StatelessWidget {
                 minWidth: double.infinity,
                 height: 50,
                 color: Theme.of(context).primaryColor,
-                onPressed: () {},
+                onPressed: () {
+                  controller.signUp().whenComplete(() => log('Success'));
+                },
                 child: const Text(
                   'Sign Up',
                   style: TextStyle(fontSize: 18, color: Colors.white),
