@@ -27,4 +27,29 @@ class UserContoller extends GetxController {
       log("Enter data");
     }
   }
+
+  Future<void> signIn(BuildContext context) async {
+    if (emailCtr.text.isNotEmpty && passCtr.text.isNotEmpty) {
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+              email: emailCtr.text.trim(),
+              password: passCtr.text.trim(),
+            )
+            .then((value) => value.user != null
+                ? Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/shop',
+                    (route) => false,
+                  )
+                : null);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == "invalid-email") {
+          log('Invalid email');
+        }
+      }
+    } else {
+      log("Enter data");
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_11_12/feature/authentication/sign_in.dart';
 import 'package:firebase_11_12/feature/authentication/sign_up.dart';
+import 'package:firebase_11_12/feature/shop/shop.dart';
 import 'package:firebase_11_12/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.indigo,
         ),
       ),
-      home: const SignInScreen(),
+      initialRoute: '/signin',
       routes: {
         '/signin': (context) => SignInScreen(),
         '/signup': (context) => SignUpScreen(),
+        '/shop': (context) => ShopScreen(),
       },
     );
   }
