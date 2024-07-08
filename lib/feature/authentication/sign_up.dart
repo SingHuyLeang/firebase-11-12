@@ -70,7 +70,7 @@ class SignUpScreen extends StatelessWidget {
                 height: 50,
                 color: Theme.of(context).primaryColor,
                 onPressed: () {
-                  controller.signUp().whenComplete(() => log('Success'));
+                  controller.signUp(context).whenComplete(() => log('Success'));
                 },
                 child: const Text(
                   'Sign Up',

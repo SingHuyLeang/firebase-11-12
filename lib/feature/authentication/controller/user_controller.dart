@@ -8,7 +8,7 @@ class UserContoller extends GetxController {
   final emailCtr = TextEditingController();
   final passCtr = TextEditingController();
 
-  Future<dynamic> signUp() async {
+  Future<dynamic> signUp(BuildContext context) async {
     if (emailCtr.text.isNotEmpty && passCtr.text.isNotEmpty) {
       try {
         await FirebaseAuth.instance
@@ -17,8 +17,11 @@ class UserContoller extends GetxController {
           password: passCtr.text.trim(),
         )
             .whenComplete(() {
-          emailCtr.clear();
-          passCtr.clear();
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/shop',
+            (route) => false,
+          );
         });
       } on FirebaseAuthException catch (e) {
         log('${e.message}');
@@ -36,13 +39,15 @@ class UserContoller extends GetxController {
               email: emailCtr.text.trim(),
               password: passCtr.text.trim(),
             )
-            .then((value) => value.user != null
-                ? Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/shop',
-                    (route) => false,
-                  )
-                : null);
+            .then(
+              (value) => value.user != null
+                  ? Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/shop',
+                      (route) => false,
+                    )
+                  : null,
+            );
       } on FirebaseAuthException catch (e) {
         if (e.code == "invalid-email") {
           log('Invalid email');
