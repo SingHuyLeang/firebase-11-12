@@ -1,5 +1,8 @@
 import 'package:firebase_11_12/feature/shop/model/product_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 class ShopScreen extends StatelessWidget {
   ShopScreen({super.key});
@@ -21,7 +24,60 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Women Bag',
+                  style: Theme.of(context).textTheme.headlineSmall!.apply(
+                        color: Colors.black,
+                        fontWeightDelta: DateTime.march,
+                      ),
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  height: 50,
+                  child: CupertinoButton(
+                    minSize: double.infinity,
+                    color: Theme.of(context).colorScheme.primary,
+                    child: Text(
+                      'Add Product',
+                      style: Theme.of(context).textTheme.bodySmall!.apply(
+                            color: Colors.white,
+                            fontWeightDelta: DateTime.march,
+                          ),
+                    ),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/form-product'),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Spacer(),
+                SizedBox(
+                  height: 50,
+                  child: CupertinoButton(
+                    minSize: double.infinity,
+                    color: Theme.of(context).colorScheme.error,
+                    child: Text(
+                      'Log out',
+                      style: Theme.of(context).textTheme.bodySmall!.apply(
+                            color: Colors.white,
+                            fontWeightDelta: DateTime.march,
+                          ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,

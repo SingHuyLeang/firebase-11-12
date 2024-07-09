@@ -1,5 +1,6 @@
 import 'package:firebase_11_12/feature/authentication/sign_in.dart';
 import 'package:firebase_11_12/feature/authentication/sign_up.dart';
+import 'package:firebase_11_12/feature/shop/form.dart';
 import 'package:firebase_11_12/feature/shop/shop.dart';
 import 'package:firebase_11_12/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => SignInScreen(),
         '/signup': (context) => SignUpScreen(),
         '/shop': (context) => ShopScreen(),
+        '/form-product' : (context) => FormProduct(),
       },
     );
   }
