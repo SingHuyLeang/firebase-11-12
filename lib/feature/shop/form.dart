@@ -1,18 +1,45 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:firebase_11_12/feature/shop/controller/shop_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-class FormProduct extends StatelessWidget {
-  FormProduct({super.key});
+class FormProduct extends StatefulWidget {
+  const FormProduct({super.key});
 
-  final titleCtr = TextEditingController();
-  final descriptionCtr = TextEditingController();
-  final priceCtr = TextEditingController();
-  final sizesCtr = TextEditingController();
-  final colorsCtr = TextEditingController();
-  String? image = "luxury-woman-handbag.jpg";
+  @override
+  State<FormProduct> createState() => _FormProductState();
+}
+
+class _FormProductState extends State<FormProduct> {
+  final controller = Get.put(ShopController());
+
+  File? image;
+
+  Future<void> chooseImage() async {
+    try {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          image = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final titleCtr = TextEditingController();
+    final descriptionCtr = TextEditingController();
+    final priceCtr = TextEditingController();
+    final sizesCtr = TextEditingController();
+    final colorsCtr = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -32,17 +59,18 @@ class FormProduct extends StatelessWidget {
               size: 28,
               color: Colors.black,
             ),
-          )
+          ),
         ],
       ),
-      body: Form(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                Container(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              GestureDetector(
+                onTap: () async => chooseImage(),
+                child: Container(
                   width: 300,
                   height: 300,
                   decoration: BoxDecoration(
@@ -50,67 +78,68 @@ class FormProduct extends StatelessWidget {
                     border:
                         image != null ? null : Border.all(color: Colors.grey),
                     image: DecorationImage(
-                      image: AssetImage(image == null
-                          ? "assets/icons/image-add.png"
-                          : "assets/images/$image"),
+                      image: image != null
+                          ? FileImage(image!)
+                          : const AssetImage("assets/icons/image-add.png")
+                              as ImageProvider,
                     ),
                   ),
                 ),
-                if (image != null)
-                  Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Change Image',
-                          style: Theme.of(context).textTheme.bodyLarge!.apply(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeightDelta: DateTime.march,
-                              ),
-                        ),
+              ),
+              if (image != null)
+                Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () async => chooseImage(),
+                      child: Text(
+                        'Change Image',
+                        style: Theme.of(context).textTheme.bodyLarge!.apply(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeightDelta: DateTime.march,
+                            ),
                       ),
-                    ],
-                  ),
-                const SizedBox(height: 30),
-                Align(
-                  alignment: Alignment.center,
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 30),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Add Product',
+                  style: Theme.of(context).textTheme.titleLarge!.apply(
+                        color: Colors.black,
+                        fontWeightDelta: DateTime.march,
+                      ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              formField(titleCtr, "Product Name"),
+              const SizedBox(height: 20),
+              formField(descriptionCtr, "Description"),
+              const SizedBox(height: 20),
+              formField(priceCtr, "Product price"),
+              const SizedBox(height: 20),
+              formField(sizesCtr, "Sizes"),
+              const SizedBox(height: 20),
+              formField(colorsCtr, "Colors"),
+              const SizedBox(height: 30),
+              SizedBox(
+                height: 50,
+                child: CupertinoButton(
+                  color: Theme.of(context).colorScheme.primary,
+                  onPressed: () {},
                   child: Text(
                     'Add Product',
-                    style: Theme.of(context).textTheme.titleLarge!.apply(
-                          color: Colors.black,
+                    style: Theme.of(context).textTheme.bodyMedium!.apply(
+                          color: Colors.white,
                           fontWeightDelta: DateTime.march,
                         ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                formField(titleCtr, "Product Name"),
-                const SizedBox(height: 20),
-                formField(descriptionCtr, "Description"),
-                const SizedBox(height: 20),
-                formField(priceCtr, "Product price"),
-                const SizedBox(height: 20),
-                formField(sizesCtr, "Sizes"),
-                const SizedBox(height: 20),
-                formField(colorsCtr, "Colors"),
-                const SizedBox(height: 30),
-                SizedBox(
-                  height: 50,
-                  child: CupertinoButton(
-                    color: Theme.of(context).colorScheme.primary,
-                    onPressed: () {},
-                    child: Text(
-                      'Add Product',
-                      style: Theme.of(context).textTheme.bodyMedium!.apply(
-                            color: Colors.white,
-                            fontWeightDelta: DateTime.march,
-                          ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-              ],
-            ),
+              ),
+              const SizedBox(height: 30),
+            ],
           ),
         ),
       ),
