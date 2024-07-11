@@ -128,7 +128,13 @@ class _FormProductState extends State<FormProduct> {
                 height: 50,
                 child: CupertinoButton(
                   color: Theme.of(context).colorScheme.primary,
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (image != null) {
+                      controller
+                          .uploadImage(image!)
+                          .whenComplete(() => image = File(""));
+                    }
+                  },
                   child: Text(
                     'Add Product',
                     style: Theme.of(context).textTheme.bodyMedium!.apply(

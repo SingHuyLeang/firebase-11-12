@@ -1,8 +1,6 @@
 import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 class ShopScreen extends StatelessWidget {
   ShopScreen({super.key});
