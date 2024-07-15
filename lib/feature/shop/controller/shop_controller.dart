@@ -1,20 +1,59 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_11_12/feature/shop/model/product_model.dart';
+import 'package:firebase_11_12/widget/loading.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ShopController extends GetxController {
+  final titleCtr = TextEditingController();
+  final descriptionCtr = TextEditingController();
+  final priceCtr = TextEditingController();
+  final sizesCtr = TextEditingController();
+  final colorsCtr = TextEditingController();
   final storage = FirebaseStorage.instance;
-  Future<void> uploadImage(File image) async {
-    log("image path = ${image.path}");
+  final db = FirebaseFirestore.instance.collection("products");
+  Future<String> uploadImage(File image) async {
+    String downloadURL = "";
     try {
       String fileName = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';
       log("file name = $fileName");
       await storage.ref(fileName).putFile(image);
-      String downloadURL = await storage.ref(fileName).getDownloadURL();
+      downloadURL = await storage.ref(fileName).getDownloadURL();
       log('File uploaded. Download URL: $downloadURL');
     } on FirebaseException catch (e) {
       log('Error occurred while uploading the file: $e');
     }
+    return downloadURL;
+  }
+
+  Future<void> addProduct(File file) async {
+    String allColor = colorsCtr.text.replaceAll(',', ' ');
+    List<String> colors = allColor.split(' ');
+
+    openLoading();
+
+    await db
+        .add(ProductModel(
+                id: DateTime.now().microsecondsSinceEpoch,
+                title: titleCtr.text,
+                detail: descriptionCtr.text,
+                price: double.parse(priceCtr.text),
+                size: int.parse(sizesCtr.text),
+                colors: colors,
+                image: await uploadImage(file))
+            .toJson())
+        .then((value) =>
+            (value != null) ? log("product added") : log("product not added"))
+        .whenComplete(() {
+      titleCtr.text = "";
+      descriptionCtr.text = "";
+      priceCtr.text = "";
+      sizesCtr.text = "";
+      colorsCtr.text = "";
+      closeLoading();
+    });
   }
 }

@@ -7,16 +7,14 @@ class ShopScreen extends StatelessWidget {
 
   final products = [
     ProductModel(
-      id: 1,
-      title: "Offical Code",
-      detail: "detaila,smhjvsaghjsagjcsakli;jhoaisjkhcjbas jmc",
-      price: 29.99,
-      size: 16,
-      colors: ["red", "gray", "indigo"],
-      images: [
-        "https://imgs.search.brave.com/WwZwFJBEz_ZlsT7iq7PAwpfxhFbgZBFH5MSLuL6V6Ps/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFpSTFxRW9pS0wu/anBn"
-      ],
-    )
+        id: 1,
+        title: "Offical Code",
+        detail: "detaila,smhjvsaghjsagjcsakli;jhoaisjkhcjbas jmc",
+        price: 29.99,
+        size: 16,
+        colors: ["red", "gray", "indigo"],
+        image:
+            "https://imgs.search.brave.com/WwZwFJBEz_ZlsT7iq7PAwpfxhFbgZBFH5MSLuL6V6Ps/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFpSTFxRW9pS0wu/anBn")
   ];
 
   @override
@@ -112,7 +110,7 @@ class ShopScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image(
-                image: NetworkImage(products[0].images[0]),
+                image: NetworkImage(products[0].image),
               ),
               Text(
                 products[0].title,

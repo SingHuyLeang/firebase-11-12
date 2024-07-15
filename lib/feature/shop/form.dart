@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_11_12/feature/shop/controller/shop_controller.dart';
+import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,11 +36,6 @@ class _FormProductState extends State<FormProduct> {
 
   @override
   Widget build(BuildContext context) {
-    final titleCtr = TextEditingController();
-    final descriptionCtr = TextEditingController();
-    final priceCtr = TextEditingController();
-    final sizesCtr = TextEditingController();
-    final colorsCtr = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -114,15 +110,15 @@ class _FormProductState extends State<FormProduct> {
                 ),
               ),
               const SizedBox(height: 20),
-              formField(titleCtr, "Product Name"),
+              formField(controller.titleCtr, "Product Name"),
               const SizedBox(height: 20),
-              formField(descriptionCtr, "Description"),
+              formField(controller.descriptionCtr, "Description"),
               const SizedBox(height: 20),
-              formField(priceCtr, "Product price"),
+              formField(controller.priceCtr, "Product price"),
               const SizedBox(height: 20),
-              formField(sizesCtr, "Sizes"),
+              formField(controller.sizesCtr, "Sizes"),
               const SizedBox(height: 20),
-              formField(colorsCtr, "Colors"),
+              formField(controller.colorsCtr, "Colors"),
               const SizedBox(height: 30),
               SizedBox(
                 height: 50,
@@ -130,8 +126,8 @@ class _FormProductState extends State<FormProduct> {
                   color: Theme.of(context).colorScheme.primary,
                   onPressed: () async {
                     if (image != null) {
-                      controller
-                          .uploadImage(image!)
+                      await controller
+                          .addProduct(image!)
                           .whenComplete(() => image = File(""));
                     }
                   },
