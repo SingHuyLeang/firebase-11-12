@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,17 +6,8 @@ import 'package:flutter/material.dart';
 class ShopScreen extends StatelessWidget {
   ShopScreen({super.key});
 
-  final products = [
-    ProductModel(
-        id: 1,
-        title: "Offical Code",
-        detail: "detaila,smhjvsaghjsagjcsakli;jhoaisjkhcjbas jmc",
-        price: 29.99,
-        size: 16,
-        colors: ["red", "gray", "indigo"],
-        image:
-            "https://imgs.search.brave.com/WwZwFJBEz_ZlsT7iq7PAwpfxhFbgZBFH5MSLuL6V6Ps/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFpSTFxRW9pS0wu/anBn")
-  ];
+  CollectionReference dataRef =
+      FirebaseFirestore.instance.collection("products");
 
   @override
   Widget build(BuildContext context) {
@@ -95,39 +87,73 @@ class ShopScreen extends StatelessWidget {
           )
         ],
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisExtent: 300,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: 10,
-        itemBuilder: (_, index) => Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image(
-                image: NetworkImage(products[0].image),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: dataRef.snapshots(),
+        builder: (context, snapshort) {
+          if (snapshort.hasError) {
+            return const Center(
+              child: Icon(
+                Icons.error,
+                color: Colors.red,
+                size: 26,
               ),
-              Text(
-                products[0].title,
-                style: Theme.of(context).textTheme.bodyMedium!.apply(
-                      color: Colors.grey[700],
-                    ),
+            );
+          } else if (snapshort.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 300,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
               ),
-              Text(
-                '\$ ${products[0].price}',
-                style: Theme.of(context).textTheme.bodyMedium!.apply(
-                      color: Colors.black,
-                      fontWeightDelta: DateTime.may,
-                    ),
+              itemCount: snapshort.data!.docs.length,
+              itemBuilder: (_, index) => CardItem(
+                product: ProductModel.fromJson(
+                  snapshort.data!.docs[index].data() as Map<String, dynamic>,
+                ),
               ),
-            ],
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class CardItem extends StatelessWidget {
+  const CardItem({super.key, required this.product});
+
+  final ProductModel product;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image(
+            image: NetworkImage(product.image),
           ),
-        ),
+          Text(
+            product.title,
+            style: Theme.of(context).textTheme.bodyMedium!.apply(
+                  color: Colors.grey[700],
+                ),
+          ),
+          Text(
+            '\$ ${product.price}',
+            style: Theme.of(context).textTheme.bodyMedium!.apply(
+                  color: Colors.black,
+                  fontWeightDelta: DateTime.may,
+                ),
+          ),
+        ],
       ),
     );
   }

@@ -4,7 +4,7 @@ class ProductModel {
   String detail;
   double price;
   int size;
-  List<String> colors;
+  List<dynamic> colors;
   String image;
 
   ProductModel({

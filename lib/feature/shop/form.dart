@@ -128,7 +128,7 @@ class _FormProductState extends State<FormProduct> {
                     if (image != null) {
                       await controller
                           .addProduct(image!)
-                          .whenComplete(() => image = File(""));
+                          .whenComplete(() async => image = File(""));
                     }
                   },
                   child: Text(

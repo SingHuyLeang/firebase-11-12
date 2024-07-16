@@ -45,8 +45,6 @@ class ShopController extends GetxController {
                 colors: colors,
                 image: await uploadImage(file))
             .toJson())
-        .then((value) =>
-            (value != null) ? log("product added") : log("product not added"))
         .whenComplete(() {
       titleCtr.text = "";
       descriptionCtr.text = "";
@@ -54,6 +52,9 @@ class ShopController extends GetxController {
       sizesCtr.text = "";
       colorsCtr.text = "";
       closeLoading();
+      Get.back();
+      Get.back();
     });
+    update();
   }
 }
