@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => SignInScreen(),
         '/signup': (context) => SignUpScreen(),
         '/shop': (context) => ShopScreen(),
-        '/form-product' : (context) => FormProduct(),
+        '/form-product' : (context) => const FormProduct(),
       },
     );
   }

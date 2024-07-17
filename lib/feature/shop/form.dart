@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_11_12/feature/shop/controller/shop_controller.dart';
-import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

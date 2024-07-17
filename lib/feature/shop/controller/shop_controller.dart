@@ -57,4 +57,12 @@ class ShopController extends GetxController {
     });
     update();
   }
+
+  Future<void> deleteProduct(String docId) async {
+    openLoading();
+    await db.doc(docId).delete().whenComplete(() {
+      closeLoading();
+      Get.back();
+    });
+  }
 }

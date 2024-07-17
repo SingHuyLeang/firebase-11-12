@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import 'controller/shop_controller.dart';
+
+// ignore: must_be_immutable
 class ShopScreen extends StatelessWidget {
   ShopScreen({super.key});
 
@@ -115,6 +121,7 @@ class ShopScreen extends StatelessWidget {
                 product: ProductModel.fromJson(
                   snapshort.data!.docs[index].data() as Map<String, dynamic>,
                 ),
+                docId: snapshort.data!.docs[index].id,
               ),
             );
           }
@@ -125,35 +132,68 @@ class ShopScreen extends StatelessWidget {
 }
 
 class CardItem extends StatelessWidget {
-  const CardItem({super.key, required this.product});
+  CardItem({super.key, required this.product, required this.docId});
 
   final ProductModel product;
+  final String docId;
+
+  final controller = Get.put(ShopController());
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image(
-            image: NetworkImage(product.image),
-          ),
-          Text(
-            product.title,
-            style: Theme.of(context).textTheme.bodyMedium!.apply(
-                  color: Colors.grey[700],
+    return GestureDetector(
+      onLongPress: () {
+        Get.bottomSheet(
+          Container(
+            width: double.infinity,
+            height: 100,
+            color: Colors.white,
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Update',
+                      style: Theme.of(context).textTheme.bodyMedium),
                 ),
-          ),
-          Text(
-            '\$ ${product.price}',
-            style: Theme.of(context).textTheme.bodyMedium!.apply(
-                  color: Colors.black,
-                  fontWeightDelta: DateTime.may,
+                TextButton(
+                  onPressed: () async => controller.deleteProduct(docId),
+                  child: Text(
+                    'Delete',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .apply(color: Colors.red),
+                  ),
                 ),
+              ],
+            ),
           ),
-        ],
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image(
+              image: NetworkImage(product.image),
+            ),
+            Text(
+              product.title,
+              style: Theme.of(context).textTheme.bodyMedium!.apply(
+                    color: Colors.grey[700],
+                  ),
+            ),
+            Text(
+              '\$ ${product.price}',
+              style: Theme.of(context).textTheme.bodyMedium!.apply(
+                    color: Colors.black,
+                    fontWeightDelta: DateTime.may,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
