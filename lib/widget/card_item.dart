@@ -1,5 +1,5 @@
-
 import 'package:firebase_11_12/feature/shop/controller/shop_controller.dart';
+import 'package:firebase_11_12/feature/shop/form.dart';
 import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +24,12 @@ class CardItem extends StatelessWidget {
             child: Column(
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => Get.to(
+                    FormProduct(
+                      product: product,
+                      docId: docId,
+                    ),
+                  ),
                   child: Text('Update',
                       style: Theme.of(context).textTheme.bodyMedium),
                 ),

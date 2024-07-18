@@ -1,14 +1,19 @@
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:firebase_11_12/feature/shop/controller/shop_controller.dart';
+import 'package:firebase_11_12/feature/shop/model/product_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FormProduct extends StatefulWidget {
-  const FormProduct({super.key});
+  const FormProduct({super.key, this.product, this.docId});
+
+  final ProductModel? product;
+  final String? docId;
 
   @override
   State<FormProduct> createState() => _FormProductState();
@@ -18,6 +23,8 @@ class _FormProductState extends State<FormProduct> {
   final controller = Get.put(ShopController());
 
   File? image;
+
+  String imageURL = "";
 
   Future<void> chooseImage() async {
     try {
@@ -31,6 +38,37 @@ class _FormProductState extends State<FormProduct> {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  bool isUpdate = false;
+
+  @override
+  void initState() {
+    if (widget.docId != null && widget.product != null) {
+      controller.titleCtr.text = widget.product!.title;
+      controller.descriptionCtr.text = widget.product!.detail;
+      controller.priceCtr.text = widget.product!.price.toString();
+      controller.sizesCtr.text = widget.product!.size.toString();
+      for (String color in widget.product!.colors) {
+        controller.colorsCtr.text += "$color ";
+      }
+      imageURL = widget.product!.image;
+
+      isUpdate = true;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.titleCtr.text = "";
+    controller.descriptionCtr.text = "";
+    controller.priceCtr.text = "";
+    controller.sizesCtr.text = "";
+    controller.colorsCtr.text = "";
+    imageURL = "";
+    super.dispose();
   }
 
   @override
@@ -73,10 +111,12 @@ class _FormProductState extends State<FormProduct> {
                     border:
                         image != null ? null : Border.all(color: Colors.grey),
                     image: DecorationImage(
-                      image: image != null
-                          ? FileImage(image!)
-                          : const AssetImage("assets/icons/image-add.png")
-                              as ImageProvider,
+                      image: imageURL.isNotEmpty
+                          ? NetworkImage(imageURL)
+                          : image != null
+                              ? FileImage(image!)
+                              : const AssetImage("assets/icons/image-add.png")
+                                  as ImageProvider,
                     ),
                   ),
                 ),
@@ -124,14 +164,31 @@ class _FormProductState extends State<FormProduct> {
                 child: CupertinoButton(
                   color: Theme.of(context).colorScheme.primary,
                   onPressed: () async {
-                    if (image != null) {
-                      await controller
-                          .addProduct(image!)
-                          .whenComplete(() async => image = File(""));
+                    if (image != null || imageURL.isNotEmpty) {
+                      if (!isUpdate) {
+                        await controller
+                            .addProduct(image!)
+                            .whenComplete(() async => image = File(""));
+                      } else {
+                        String allColor =
+                            controller.colorsCtr.text.replaceAll(',', ' ');
+                        List<String> colors = allColor.split(' ');
+                        await controller.updateProduct(
+                            widget.docId!,
+                            ProductModel(
+                              id: DateTime.now().microsecondsSinceEpoch,
+                              title: controller.titleCtr.text,
+                              detail: controller.descriptionCtr.text,
+                              price: double.parse(controller.priceCtr.text),
+                              size: int.parse(controller.sizesCtr.text),
+                              colors: colors,
+                              image: imageURL,
+                            ));
+                      }
                     }
                   },
                   child: Text(
-                    'Add Product',
+                    !isUpdate ? 'Add Product' : "Update Product",
                     style: Theme.of(context).textTheme.bodyMedium!.apply(
                           color: Colors.white,
                           fontWeightDelta: DateTime.march,

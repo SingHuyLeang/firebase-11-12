@@ -65,4 +65,13 @@ class ShopController extends GetxController {
       Get.back();
     });
   }
+
+  Future<void> updateProduct(String docId,ProductModel product) async {
+    openLoading();
+    await db.doc(docId).update(product.toJson()).whenComplete(() {
+      closeLoading();
+      Get.back();
+      Get.back();
+    });
+  }
 }
